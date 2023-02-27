@@ -1,5 +1,5 @@
 {
-    "name": "igormakarov/smsby.api.client",
+    "name": "igormakarov/smsby.api.php.client",
     "description": "Client for SMS.BY API - service for send messages",
     "type": "library",
     "require-dev": {
