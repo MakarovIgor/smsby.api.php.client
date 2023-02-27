@@ -1,0 +1,25 @@
+{
+    "name": "igormakarov/smsby.api.client",
+    "description": "Client for SMS.BY API - service for send messages",
+    "type": "library",
+    "require-dev": {
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "igormakarov\\SmsByApiClient\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Makarov Igor",
+            "email": "igormakarov1991@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.4.3 || ^8.0.2",
+        "guzzlehttp/guzzle": "^7.4",
+        "ext-json": "*"
+    }
+}
