@@ -10,7 +10,7 @@
 
 #### Подключение к проекту:
 ```cli
-composer require igormakarov/smsby.api.php.client - [https://packagist.org/packages/igormakarov/alphasms.http.api.client](https://packagist.org/packages/igormakarov/smsby.api.php.client)
+composer require igormakarov/smsby.api.php.client
 ```
 ```php
 require_once 'vendor/autoload.php';
