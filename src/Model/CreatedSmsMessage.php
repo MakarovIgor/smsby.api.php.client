@@ -6,15 +6,15 @@ class CreatedSmsMessage
 {
     private int $parts;
     private int $length;
-    private int $messageId;
+    private int $id;
     private string $alphaName;
     private int $time;
 
-    public function __construct($parts, $length, $messageId, $alphaName, $time)
+    public function __construct($parts, $length, $id, $alphaName, $time)
     {
         $this->parts = $parts;
         $this->length = $length;
-        $this->messageId = $messageId;
+        $this->id = $id;
         $this->alphaName = $alphaName;
         $this->time = $time;
     }
@@ -38,9 +38,9 @@ class CreatedSmsMessage
     /**
      * @return int
      */
-    public function getMessageId(): int
+    public function getId(): int
     {
-        return $this->messageId;
+        return $this->id;
     }
 
     /**
