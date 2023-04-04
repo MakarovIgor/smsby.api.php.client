@@ -216,4 +216,10 @@ class SmsByApiClient
     {
         return $this->apiUrl . $apiVersion . '/' . $command;
     }
+
+
+    private function test()
+    {
+        var_dump('test');
+    }
 }
