@@ -63,7 +63,7 @@ class SmsByApiClient
      */
     public function sendQuickSMS(string $message, string $phone, int $alphaNameId = 0): int
     {
-        if (empty($message)) {
+        if (empty(trim($message))) {
             throw new Exception('Message text is empty');
         }
 
