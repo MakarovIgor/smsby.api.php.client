@@ -22,17 +22,16 @@ class SmsStatus
         return $this->deliveredUnixTime > 0;
     }
 
-    /**
-     * @return int
-     */
+    public function isTimeOut(): bool
+    {
+        return time() >= strtotime('+1 day', $this->getSentUnixTime());
+    }
+
     public function getDeliveredUnixTime(): int
     {
         return $this->deliveredUnixTime;
     }
 
-    /**
-     * @return int
-     */
     public function getSentUnixTime(): int
     {
         return $this->sentUnixTime;
