@@ -24,6 +24,10 @@ class SmsStatus
 
     public function isTimeOut(): bool
     {
+        if ($this->deliveredUnixTime > 0) {
+            return false;
+        }
+
         return time() >= strtotime('+1 day', $this->getSentUnixTime());
     }
 
