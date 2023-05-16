@@ -63,7 +63,7 @@ class SmsByApiClient
      */
     public function sendQuickSMS(string $message, string $phone, int $alphaNameId = 0): int
     {
-        if (empty($message)) {
+        if (empty(trim($message))) {
             throw new Exception('Message text is empty');
         }
 
@@ -109,9 +109,9 @@ class SmsByApiClient
     /**
      * @throws Exception
      */
-    public function sendSms(int $messageId, string $phone): int
+    public function sendSms(CreatedSmsMessage $createdMessage, string $phone): int
     {
-        $content = $this->sendRequest('sendSms', ['message_id' => $messageId, 'phone' => $phone]);
+        $content = $this->sendRequest('sendSms', ['message_id' => $createdMessage->getId(), 'phone' => $phone]);
         return (int)$content['sms_id'];
     }
 
