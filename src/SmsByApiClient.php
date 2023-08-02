@@ -4,6 +4,7 @@ namespace igormakarov\SmsByApiClient;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use igormakarov\SmsByApiClient\MapperResponseToModel\AlphaNameCategoriesMapper;
 use igormakarov\SmsByApiClient\MapperResponseToModel\AlphaNamesMapper;
@@ -18,6 +19,7 @@ class SmsByApiClient
     private string $token;
     private Client $httpClient;
     private string $apiUrl = 'https://app.sms.by/api/';
+    private array $requestOptions = [];
 
     /**
      * @throws Exception
@@ -29,6 +31,11 @@ class SmsByApiClient
         }
         $this->token = $token;
         $this->httpClient = new Client();
+    }
+
+    public function setRequestOptions(array $options)
+    {
+        $this->requestOptions = $options;
     }
 
     /**
@@ -188,18 +195,26 @@ class SmsByApiClient
     protected function sendRequest(string $command, array $params = [], string $method = 'GET', string $apiVersion = 'v1')
     {
         try {
-            $params['token'] = $this->token;
-            $url = $this->buildUrl($apiVersion, $command);
-            $response = $this->httpClient->request($method, $url, ['query' => $params]);
+            $options = $this->prepareRequestOptions($params);
+            $url = $this->prepareUrl($apiVersion, $command);
+            $response = $this->httpClient->request($method, $url, $options);
             $responseData = json_decode($response->getBody()->getContents(), true);
             $this->validateResponse($responseData);
             return $responseData;
+        } catch (ConnectException $ex) {
+            throw $ex;
         } catch (GuzzleException $ex) {
             if ($ex->getCode() == 403) {
                 throw new Exception('Access Denied');
             }
             throw new Exception($ex->getMessage());
         }
+    }
+
+    private function prepareRequestOptions(array $params): array
+    {
+        $params['token'] = $this->token;
+        return array_merge($this->requestOptions,['query' => $params]);
     }
 
     /**
@@ -212,7 +227,7 @@ class SmsByApiClient
         }
     }
 
-    private function buildUrl(string $apiVersion, string $command): string
+    private function prepareUrl(string $apiVersion, string $command): string
     {
         return $this->apiUrl . $apiVersion . '/' . $command;
     }
