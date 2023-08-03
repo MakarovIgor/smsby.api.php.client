@@ -20,6 +20,7 @@ class SmsByApiClient
     private Client $httpClient;
     private string $apiUrl = 'https://app.sms.by/api/';
     private array $requestOptions = [];
+    private int $COUNT_TRY_SEND_REQUEST = 2;
 
     /**
      * @throws Exception
@@ -202,7 +203,13 @@ class SmsByApiClient
             $this->validateResponse($responseData);
             return $responseData;
         } catch (ConnectException $ex) {
-            throw $ex;
+            sleep(2);
+            if($this->COUNT_TRY_SEND_REQUEST == 0) {
+                $this->COUNT_TRY_SEND_REQUEST = 2;
+                throw $ex;
+            }
+            $this->COUNT_TRY_SEND_REQUEST--;
+            return $this->sendRequest($command, $params, $method, $apiVersion);
         } catch (GuzzleException $ex) {
             if ($ex->getCode() == 403) {
                 throw new Exception('Access Denied');
