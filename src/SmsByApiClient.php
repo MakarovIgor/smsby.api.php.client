@@ -199,6 +199,7 @@ class SmsByApiClient
             $options = $this->prepareRequestOptions($params);
             $url = $this->prepareUrl($apiVersion, $command);
             $response = $this->httpClient->request($method, $url, $options);
+            $this->COUNT_TRY_SEND_REQUEST = 2;
             $responseData = json_decode($response->getBody()->getContents(), true);
             $this->validateResponse($responseData);
             return $responseData;
