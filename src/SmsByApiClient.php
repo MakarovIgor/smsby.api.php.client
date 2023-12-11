@@ -4,7 +4,7 @@ namespace igormakarov\SmsByApiClient;
 
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use igormakarov\SmsByApiClient\MapperResponseToModel\AlphaNameCategoriesMapper;
 use igormakarov\SmsByApiClient\MapperResponseToModel\AlphaNamesMapper;
@@ -20,7 +20,6 @@ class SmsByApiClient
     private Client $httpClient;
     private string $apiUrl = 'https://app.sms.by/api/';
     private array $requestOptions = [];
-    private int $COUNT_TRY_SEND_REQUEST = 2;
 
     /**
      * @throws Exception
@@ -199,23 +198,23 @@ class SmsByApiClient
             $options = $this->prepareRequestOptions($params);
             $url = $this->prepareUrl($apiVersion, $command);
             $response = $this->httpClient->request($method, $url, $options);
-            $this->COUNT_TRY_SEND_REQUEST = 2;
             $responseData = json_decode($response->getBody()->getContents(), true);
             $this->validateResponse($responseData);
             return $responseData;
-        } catch (ConnectException $ex) {
-            sleep(2);
-            if($this->COUNT_TRY_SEND_REQUEST == 0) {
-                $this->COUNT_TRY_SEND_REQUEST = 2;
-                throw $ex;
+        }  catch (ClientException $exception) {
+            $responseBody = $exception->getResponse()->getBody()->getContents();
+            if (!empty($responseBody)) {
+                $responseJSON = json_decode($responseBody, true);
+                if (!empty($responseJSON['error'])) {
+                    throw new Exception($responseJSON['error']);
+                }
             }
-            $this->COUNT_TRY_SEND_REQUEST--;
-            return $this->sendRequest($command, $params, $method, $apiVersion);
+            throw new $exception;
         } catch (GuzzleException $ex) {
             if ($ex->getCode() == 403) {
                 throw new Exception('Access Denied');
             }
-            throw new Exception($ex->getMessage());
+            throw new Exception($ex);
         }
     }
 
