@@ -10,7 +10,6 @@ class BalanceMapper
     {
         return new Balance(
             $responseContent['result'][0]['balance'],
-            $responseContent['result'][0]['viber_balance'],
             $responseContent['currency']
         );
     }

@@ -4,13 +4,12 @@ namespace igormakarov\SmsByApiClient\Model;
 
 class Balance
 {
-    private float $balanceAmount, $viberBalanceAmount;
+    private float $balanceAmount;
     private string $currency;
 
-    public function __construct($balanceAmount, $viberBalanceAmount, $currency)
+    public function __construct($balanceAmount, $currency)
     {
         $this->balanceAmount = $balanceAmount;
-        $this->viberBalanceAmount = $viberBalanceAmount;
         $this->currency = $currency;
     }
 
@@ -20,14 +19,6 @@ class Balance
     public function getAmount(): float
     {
         return $this->balanceAmount;
-    }
-
-    /**
-     * @return float
-     */
-    public function getViberAmount(): float
-    {
-        return $this->viberBalanceAmount;
     }
 
     /**
