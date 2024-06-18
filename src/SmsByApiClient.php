@@ -6,6 +6,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use igormakarov\SmsByApiClient\MapperResponseToModel\AlphaNameCategoriesMapper;
 use igormakarov\SmsByApiClient\MapperResponseToModel\AlphaNamesMapper;
 use igormakarov\SmsByApiClient\MapperResponseToModel\BalanceMapper;
@@ -215,6 +216,13 @@ class SmsByApiClient
             if ($ex->getCode() == 403) {
                 throw new Exception('Access Denied');
             }
+
+            if ($ex instanceof RequestException) {
+                $contents = $ex->getResponse()->getBody()->getContents();
+                $response = json_decode($contents, true);
+                $this->validateResponse($response);
+            }
+
             throw new Exception($ex->getMessage());
         }
     }
