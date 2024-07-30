@@ -130,7 +130,7 @@ class SmsByApiClient
     public function checkSMS(int $smsId): SmsStatus
     {
         $smsStatus = $this->sendRequest("checkSMS", ['sms_id' => $smsId]);
-        return new SmsStatus($smsStatus['sent'], $smsStatus['delivered']);
+        return new SmsStatus($smsStatus['sent'], $smsStatus['delivered'], $smsStatus['status']);
     }
 
     /**
